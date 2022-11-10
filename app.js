@@ -14,14 +14,11 @@
 
 // 7. Reset button clears the board to start new
 
-// ------- Time to start coding! --------
-
-
+// ---------------
 
 // 1. Players enter names and they are saved
 
       // Need variables, an empty array, funcitons, and eventlistener for players to submit their names
-
 
 
 var p1button = document.getElementById("p1button")
@@ -31,6 +28,7 @@ var p2button = document.getElementById("p2button")
 var p2div = document.getElementById("p2div")
 
 let names = []
+let namesEntered = false
 
 function p1namefunc(){
   var p1name = document.getElementById("p1input").value
@@ -47,10 +45,6 @@ function p2namefunc(){
 p1button.addEventListener("click", p1namefunc)
 p2button.addEventListener("click", p2namefunc)
 
-// It works!
-
-// ----
-
 // 2. A random player is assigned to go first, X's or O's is assigned at this time
 
   // Random player assigned when "Click Here to Start Button" is clicked
@@ -58,25 +52,24 @@ p2button.addEventListener("click", p2namefunc)
 var startButton = document.getElementById("startButton")
 
 function randomPlayerfunc(){
+  
   console.log(names)
-  let randomName = names[Math.floor(Math.random()*names.length)]
-  console.log(randomName)
-  randompdiv.textContent = `${randomName} goes first! ${randomName} will be X`
+  let firstplayer = names[Math.floor(Math.random()*names.length)]
+  console.log(firstplayer)
+  randompdiv.textContent = `${firstplayer} goes first! ${firstplayer} will be X`
  }
-
 
 startButton.addEventListener("click", randomPlayerfunc)
 
-// It works!
-
-// ----
-
 // 3. Players can play their move by clicking empty spaces on the board
 
-const cells = document.querySelectorAll(".cell");
+// Need to create some variables to select
 
+const cells = document.querySelectorAll(".cell");
 const statusText = document.querySelector("#statusText");
 const restartBtn = document.querySelector("#restartBtn");
+
+// Need to define winning matches
 
 const winConditions = [
   [0,1,2],
@@ -89,19 +82,19 @@ const winConditions = [
   [2,4,6],
 ];
 
+// Need an array to store the users moves in. 
+
 let options = ["", "", "", "", "", "", "", "", ""];
 let currentPlayer = "X";
 let running = false;
 
-//render()
+// Have the game begin once users have entered their names
 
 startButton.addEventListener("click", initializeGame)
 
 function initializeGame() {
-
   cells.forEach(cell => cell.addEventListener("click", cellClicked));
   restartBtn.addEventListener("click", restartGame);
-  //statusText.textContent = `${currentPlayer}'s turn`;
   running = true;
 }
 function cellClicked() {
@@ -110,7 +103,6 @@ function cellClicked() {
   if(options[cellIndex] != "" || !running){
     return;
   }
-
   updateCell(this, cellIndex);
   checkWinner();
 }
@@ -118,10 +110,14 @@ function updateCell(cell, index){
   options[index] = currentPlayer;
   cell.textContent = currentPlayer;
 }
+
+// 4. Player alternate moves
 function changePlayer(){
   currentPlayer = (currentPlayer == "X") ? "O" : "X";
   randompdiv.textContent = `${currentPlayer}'s turn`;
 }
+
+// 5. & 6. If 3 in a row "winner", if 3 in a tie then "draw" 
 function checkWinner(){
 let roundWon = false;
 for (let i=0; i<winConditions.length; i++){
@@ -139,20 +135,24 @@ for (let i=0; i<winConditions.length; i++){
   }
 }
 if(roundWon){
-  statusText.textContent = `${currentPlayer} wins!`
+  randompdiv.textContent = `${currentPlayer} wins!`
   running = false;
 }else if(!options.includes("")){
-  statusText.textContent = 'Draw!'
+  randompdiv.textContent = 'Draw!'
   running = false;
 }
 else{
   changePlayer();
 }
 }
+
+// 7. reset button clears the board
+
 function restartGame(){
   currentPlayer = "X";
   options = ["", "", "", "", "", "", "", "", ""];
-  statusText.textContent = `${currentPlayer}'s turn`;
+  let firstplayer = names[Math.floor(Math.random()*names.length)]
+  randompdiv.textContent = `${firstplayer} goes first! ${firstplayer} will be X`
   cells.forEach(cell => cell.textContent = "");
   running = true;
 }
