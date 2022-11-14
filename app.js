@@ -145,5 +145,3 @@ function restartGame(){
   cells.forEach(cell => cell.innerHTML = "");
   running = true;
 }
-
-newPlayersBtn.addEventListener("click", newPlayers)
